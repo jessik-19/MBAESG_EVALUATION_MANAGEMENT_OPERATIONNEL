@@ -25,3 +25,21 @@ h1, h2, h3 {
 # --- Sidebar ---
 st.sidebar.title("📑 Navigation")
 page = st.sidebar.radio("Choisissez une page", ["Tableau de bord", "Visualisations"])
+
+# --- Import CSV ---
+st.sidebar.title("📁 Import de données")
+fichier = st.sidebar.file_uploader("Téléverser un CSV", type=["csv"])
+
+# --- Connexion à DuckDB ---
+con = duckdb.connect(database='vehicules_electriques.duckdb', read_only=False)
+
+# --- Chargement des données ---
+if fichier:
+    df = pd.read_csv(fichier)
+    con.execute("DROP TABLE IF EXISTS vehicules")
+    con.execute("CREATE TABLE vehicules AS SELECT * FROM df")
+    st.sidebar.success("✅ Données enregistrées dans DuckDB")
+elif 'vehicules' in con.execute("SHOW TABLES").fetchdf()['name'].values:
+    df = con.execute("SELECT * FROM vehicules").fetchdf()
+else:
+    df = None
