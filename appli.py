@@ -43,3 +43,16 @@ elif 'vehicules' in con.execute("SHOW TABLES").fetchdf()['name'].values:
     df = con.execute("SELECT * FROM vehicules").fetchdf()
 else:
     df = None
+
+# --- Filtres au niveau du siebar ---
+if df is not None:
+    st.sidebar.markdown("## 🎛️ Filtres dynamiques")
+    marques = sorted(df['brand'].dropna().unique())
+    types = sorted(df['car_body_type'].dropna().unique())
+
+    filtre_marques = st.sidebar.multiselect("Marques", options=marques, default=marques)
+    filtre_types = st.sidebar.multiselect("Types de carrosserie", options=types, default=types)
+
+    df_filtré = df[(df['brand'].isin(filtre_marques)) & (df['car_body_type'].isin(filtre_types))]
+else:
+    df_filtré = pd.DataFrame()
