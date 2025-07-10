@@ -56,3 +56,19 @@ if df is not None:
     df_filtré = df[(df['brand'].isin(filtre_marques)) & (df['car_body_type'].isin(filtre_types))]
 else:
     df_filtré = pd.DataFrame()
+
+
+# --- PAGE 1 : TABLEAU DE BORD ---
+if page == "Tableau de bord":
+    st.markdown("<h1>⚡ Tableau de bord des Véhicules Électriques</h1>", unsafe_allow_html=True)
+
+    if not df_filtré.empty:
+        # --- KPIs ---
+        autonomie_moy = round(df_filtré['range_km'].mean(), 1)
+        modele_eco_row = df_filtré[['model', 'efficiency_wh_per_km']].dropna().sort_values('efficiency_wh_per_km').head(1)
+        modele_nom = modele_eco_row.iloc[0]['model']
+        conso = modele_eco_row.iloc[0]['efficiency_wh_per_km']
+        type_top = df_filtré['car_body_type'].mode()[0]
+        nb_type = df_filtré['car_body_type'].value_counts().iloc[0]
+        nb_modeles = df_filtré['model'].nunique()
+        
