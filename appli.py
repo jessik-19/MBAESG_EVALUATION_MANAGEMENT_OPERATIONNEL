@@ -71,4 +71,50 @@ if page == "Tableau de bord":
         type_top = df_filtré['car_body_type'].mode()[0]
         nb_type = df_filtré['car_body_type'].value_counts().iloc[0]
         nb_modeles = df_filtré['model'].nunique()
+
+        st.subheader("📌 Indicateurs clés")
+        kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+
+        with kpi1:
+            st.markdown(f"""
+                <div class='card' style='background-color:#e0f2ff;'>
+                    <h4>⚡ Autonomie moyenne</h4>
+                    <h2 style='color:#0072c6;'>{autonomie_moy} km</h2>
+                </div>
+            """, unsafe_allow_html=True)
+
+        with kpi2:
+            st.markdown(f"""
+                <div class='card' style='background-color:#e8fff2;'>
+                    <h4> Modèle économe</h4>
+                    <p><strong>{modele_nom}</strong></p>
+                    <h3 style='color:#2e8b57;'>{conso} Wh/km</h3>
+                </div>
+            """, unsafe_allow_html=True)
+
+        with kpi3:
+            st.markdown(f"""
+                <div class='card' style='background-color:#fff3e6;'>
+                    <h4>🚘 Type voiture dominant</h4>
+                    <h2 style='color:#f57c00;'>{type_top} ({nb_type})</h2>
+                </div>
+            """, unsafe_allow_html=True)
+
+        with kpi4:
+            st.markdown(f"""
+                <div class='card' style='background-color:#f0e6ff;'>
+                    <h4>📋 Modèles analysés</h4>
+                    <h2 style='color:#6a1b9a;'>{nb_modeles}</h2>
+                </div>
+            """, unsafe_allow_html=True)
+
+
+        st.subheader("📄 Aperçu des données")
+        st.dataframe(df_filtré, use_container_width=True)
+
+    else:
+        st.warning("📂 Aucune donnée disponible.")
+
+
+
         
