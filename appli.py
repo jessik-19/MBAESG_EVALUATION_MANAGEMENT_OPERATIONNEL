@@ -63,14 +63,50 @@ if page == "Tableau de bord":
     st.markdown("<h1>⚡ Tableau de bord des Véhicules Électriques</h1>", unsafe_allow_html=True)
 
     if not df_filtré.empty:
+        
         # --- KPIs ---
-        autonomie_moy = round(df_filtré['range_km'].mean(), 1)
-        modele_eco_row = df_filtré[['model', 'efficiency_wh_per_km']].dropna().sort_values('efficiency_wh_per_km').head(1)
-        modele_nom = modele_eco_row.iloc[0]['model']
-        conso = modele_eco_row.iloc[0]['efficiency_wh_per_km']
-        type_top = df_filtré['car_body_type'].mode()[0]
-        nb_type = df_filtré['car_body_type'].value_counts().iloc[0]
-        nb_modeles = df_filtré['model'].nunique()
+        con.execute("DROP VIEW IF EXISTS vehicules_filtres")
+        con.register("vehicules_filtres", df_filtré)
+
+        # --- KPI 1 : Autonomie moyenne ---
+        autonomie_moy = con.execute("""
+            SELECT ROUND(AVG(range_km), 1) AS autonomie_moyenne
+            FROM vehicules_filtres
+            WHERE range_km IS NOT NULL
+        """).fetchone()[0]
+
+        # --- KPI 2 : Modèle le plus économe ---
+        modele_eco_row = con.execute("""
+            SELECT model, efficiency_wh_per_km
+            FROM vehicules_filtres
+           WHERE efficiency_wh_per_km IS NOT NULL
+            ORDER BY efficiency_wh_per_km ASC
+            LIMIT 1
+        """).fetchdf()
+
+        modele_nom = modele_eco_row.loc[0, 'model']
+        conso = modele_eco_row.loc[0, 'efficiency_wh_per_km']
+
+        # --- KPI 3 : Type dominant de carrosserie ---
+        carro_row = con.execute("""
+            SELECT car_body_type, COUNT(*) AS nombre
+            FROM vehicules_filtres
+            WHERE car_body_type IS NOT NULL
+            GROUP BY car_body_type
+            ORDER BY nombre DESC
+            LIMIT 1
+        """).fetchdf()
+
+        type_top = carro_row.loc[0, 'car_body_type']
+        nb_type = carro_row.loc[0, 'nombre']
+
+        # --- KPI 4 : Nombre de modèles uniques ---
+        nb_modeles = con.execute("""
+            SELECT COUNT(DISTINCT model)
+            FROM vehicules_filtres
+            WHERE model IS NOT NULL
+        """).fetchone()[0]
+
 
         st.subheader("📌 Indicateurs clés")
         kpi1, kpi2, kpi3, kpi4 = st.columns(4)
