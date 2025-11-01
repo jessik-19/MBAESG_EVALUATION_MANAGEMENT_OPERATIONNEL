@@ -65,4 +65,6 @@ Le fichier DuckDB utilisé contient des informations sur :
 **Ange Muriel Kamguem Mande**  
 _Master 2 Big Data & Intelligence Artificielle_  
 _Projet académique & personnel – Octobre 2025_
+🌐 [Portfolio](jessik-19.github.io/portfolio_kamguem/)  
+🔗 [LinkedIn](linkedin.com/in/ange-muriel-kamguem-mande-aabaa7295)
 ---
