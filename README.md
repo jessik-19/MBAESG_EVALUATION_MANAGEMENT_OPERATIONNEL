@@ -59,7 +59,7 @@ Le fichier DuckDB utilisé contient des informations sur :
 - L’application fonctionne **localement**, aucun hébergement cloud n’est requis.
 ---
 ## 📷 Aperçu visuel
-![Dashboard VE](vehicule_electric.png)
+![Dashboard VE](./vehicule_electric.png)
 ---
 ## 👩🏽‍💻 Réalisé par
 **Ange Muriel Kamguem Mande**  
